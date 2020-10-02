@@ -4,8 +4,6 @@ import dao.*;
 import services.*;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class JpaTest {
@@ -60,10 +58,10 @@ public class JpaTest {
     }
 
     private static void createCards(String[] cardsLabels, List<Employee> employees, List<Section> sections) {
-        List<Date> dates = new ArrayList<>();
-        dates.add(new Date(2020, Calendar.MARCH,1));
-        dates.add(new Date(2055, Calendar.SEPTEMBER,13));
-        dates.add(new Date(2030, Calendar.NOVEMBER,14));
+        List<String> dates = new ArrayList<>();
+        dates.add("2021-02-03");
+        dates.add("2023-02-03");
+        dates.add("2024-02-03");
 
         for (String label : cardsLabels) {
             int d = (int) (Math.random() * dates.size());

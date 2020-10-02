@@ -2,13 +2,12 @@ package services;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 public class Card implements Serializable {
     private long id;
     private String label;
-    private Date deadline;
+    private String deadline;
     private Employee employee;
     private int duration;
     private String tag;
@@ -18,7 +17,7 @@ public class Card implements Serializable {
     public Card() {
     }
 
-    public Card(String label, Date deadline, Employee employee, int duration, String tag, Section section, String url) {
+    public Card(String label, String deadline, Employee employee, int duration, String tag, Section section, String url) {
         this.label = label;
         this.deadline = deadline;
         this.employee = employee;
@@ -46,11 +45,11 @@ public class Card implements Serializable {
         this.label = label;
     }
 
-    public Date getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
