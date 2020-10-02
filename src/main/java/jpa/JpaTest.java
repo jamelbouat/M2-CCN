@@ -4,6 +4,7 @@ import dao.*;
 import services.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,64 +16,69 @@ public class JpaTest {
     private static SectionDao sectionDao;
     private static DepartmentDao departmentDao;
     private static EmployeeDao employeeDao;
-    private static CardDaoImp cardDao;
+    private static CardDao cardDao;
+    private static KanbanDao kanbanDao;
 
 
     public static void main(String[] args) {
-//        EntityManagerHelper.rollback();
+
         String[] SECTIONS_NAMES = new String[]{"to do", "in progress", "done"};
         String[] DEPARTMENTS_NAMES = new String[]{"Engineering", "Assembling", "Validation"};
         String[] EMPLOYEES_NAMES = new String[]{"John", "Wong", "Marie", "Sami", "Julie"};
         String[] CARDS_LABELS = new String[]{"task-1", "task-2", "task-3", "task-4", "task-5", "task-6", "task-7", "task-8"};
 
-        sectionDao = new SectionDaoImpl();
-        departmentDao = new DepartmentDaoImpl();
-        departmentDao = new DepartmentDaoImpl();
-        employeeDao = new EmployeeDaoImpl();
-        cardDao = new CardDaoImp();
+        sectionDao = new SectionDao();
+        departmentDao = new DepartmentDao();
+        employeeDao = new EmployeeDao();
+        cardDao = new CardDao();
+        kanbanDao = new KanbanDao();
 
         try {
-
-            createSections(SECTIONS_NAMES);
+            createKanban();
+            Kanban kanban = kanbanDao.findAll().get(0);
             createDepartments(DEPARTMENTS_NAMES);
-            List<Section> sections = sectionDao.getAllSectionsDao();
-            List<Department> departments = departmentDao.getAllDepartmentsDao();
+            List<Department> departments = departmentDao.findAll();
+            createSections(SECTIONS_NAMES, kanban);
+
+            List<Section> sections = sectionDao.findAll();
+
             createEmployees(EMPLOYEES_NAMES, departments);
-            List<Employee> employees = employeeDao.getAllEmployeesDao();
+            List<Employee> employees = employeeDao.findAll();
 
             createCards(CARDS_LABELS, employees, sections);
-            List<Card> cards = cardDao.getAllCards();
-
-            new Kanban("kanban", sections);
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            EntityManagerHelper.closeEntityManager();
-            EntityManagerHelper.closeEntityManagerFactory();
         }
+
+    }
+
+    private static void createKanban() {
+        Kanban kanban = new Kanban();
+        kanban.setName("kanban");
+        kanbanDao.save(kanban);
     }
 
     private static void createCards(String[] cardsLabels, List<Employee> employees, List<Section> sections) {
         List<Date> dates = new ArrayList<>();
-        dates.add(new Date(2020,2,1));
-        dates.add(new Date(2055,8,13));
-        dates.add(new Date(2030,10,14));
+        dates.add(new Date(2020, Calendar.MARCH,1));
+        dates.add(new Date(2055, Calendar.SEPTEMBER,13));
+        dates.add(new Date(2030, Calendar.NOVEMBER,14));
 
         for (String label : cardsLabels) {
             int d = (int) (Math.random() * dates.size());
             int e = (int) (Math.random() * employees.size());
             int s = (int) (Math.random() * sections.size());
             int duration = (int) (Math.random() * 100);
-            
-            cardDao.addCard(label,
-                    "dates.get(0)",
+
+            Card card = new Card(label,
+                    dates.get(d),
                     employees.get(e),
                     duration,
-                    "tag-"+ Integer.toString(duration),
+                    "tag-" + Integer.toString(duration),
                     sections.get(s),
-                    "company.com"
-                    );
+                    "company.com");
+            cardDao.save(card);
         }
     }
 
@@ -80,20 +86,25 @@ public class JpaTest {
         int i;
         for (String name : employeesNames) {
             i = (int) (Math.random() * departments.size());
-            employeeDao.addEmployeeDao(name, departments.get(i));
+            Employee employee = new Employee(name, departments.get(i));
+            employeeDao.save(employee);
         }
     }
 
     private static void createDepartments(String[] departmentsNames) {
         for (String name : departmentsNames) {
-            departmentDao.addDepartmentDao(name);
+            Department department = new Department();
+            department.setName(name);
+            departmentDao.save(department);
         }
     }
 
-    private static void createSections(String[] sectionNames) {
+    private static void createSections(String[] sectionNames, Kanban kanban) {
         for (String name : sectionNames) {
-            sectionDao.addSectionDao(name);
+            Section section = new Section();
+            section.setName(name);
+            section.setKanban(kanban);
+            sectionDao.save(section);
         }
     }
-
 }

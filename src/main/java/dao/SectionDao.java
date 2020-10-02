@@ -2,12 +2,9 @@ package dao;
 
 import services.Section;
 
-import java.util.List;
+public class SectionDao extends AbstractJpaDao<Long, Section>{
 
-public interface SectionDao {
-    public Section getSectionDao(long id);
-    public void addSectionDao(String name);
-    public void updateSectionDao(long id, String name);
-    public void removeSectionDao(long id);
-    public List<Section> getAllSectionsDao();
+    public SectionDao() {
+        super(Section.class);
+    }
 }

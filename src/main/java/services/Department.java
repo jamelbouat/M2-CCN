@@ -1,15 +1,13 @@
 package services;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
-public class Department {
+public class Department implements Serializable {
     private long id;
     private String name;
     private List<Employee> employees = new ArrayList<Employee>();

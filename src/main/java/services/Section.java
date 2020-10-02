@@ -1,11 +1,12 @@
 package services;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Section {
+public class Section implements Serializable {
     private long id;
     private String name;
     private Kanban kanban;
@@ -37,7 +38,7 @@ public class Section {
         this.name = name;
     }
 
-    @ManyToOne()
+    @ManyToOne
     public Kanban getKanban() {
         return kanban;
     }

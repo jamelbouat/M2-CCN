@@ -1,14 +1,15 @@
 package services;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Kanban {
+public class Kanban implements Serializable {
     private long id;
     private String name;
-    private List<Section> sections = new ArrayList<Section>();
+    private List<Section> sections = new ArrayList<>();
 
     public Kanban() {
     }
@@ -36,7 +37,8 @@ public class Kanban {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "kanban")
+    @OneToMany
+    @JoinColumn(name = "kanban_id")
     public List<Section> getSections() {
         return sections;
     }

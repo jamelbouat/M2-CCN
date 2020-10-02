@@ -1,8 +1,9 @@
 package services;
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Employee {
+public class Employee implements Serializable {
     private long id;
     private String name;
     private Department department;
